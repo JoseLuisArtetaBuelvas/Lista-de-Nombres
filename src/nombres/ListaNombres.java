@@ -1,5 +1,8 @@
 package nombres;
 
+import java.text.Normalizer;
+import java.util.Locale;
+
 /**
  * Arreglo de nombres de personas que se ordena con Insertion Sort implementado manualmente
  * (sin Arrays.sort, Collections.sort ni List.sort).
@@ -40,6 +43,25 @@ public class ListaNombres {
         return sb.append("]").toString();
     }
 
+    /** Ordena la lista alfabeticamente de A a Z con Insertion Sort. */
+    public void ordenarAZ() {
+        // Se recorre desde la segunda posicion: la parte izquierda [0..i-1] ya esta ordenada.
+        for (int i = 1; i < nombres.length; i++) {
+            String actual = nombres[i];   // el nombre que se va a insertar
+            int j = i - 1;
+
+            // Mientras el nombre de la izquierda vaya DESPUES del actual, se corre una posicion
+            // a la derecha para abrir espacio.
+            while (j >= 0 && compararNombres(actual, nombres[j]) < 0) {
+                nombres[j + 1] = nombres[j];
+                j--;
+            }
+
+            // Se inserta el nombre en el hueco que quedo.
+            nombres[j + 1] = actual;
+        }
+    }
+
     /**
      * Compara dos nombres ignorando mayusculas y minusculas (y tildes).
      *
@@ -59,8 +81,8 @@ public class ListaNombres {
         if (nombre == null) {
             return "";
         }
-        String minusculas = nombre.trim().toLowerCase(java.util.Locale.ROOT).replace("ñ", "n~");
-        String separado = java.text.Normalizer.normalize(minusculas, java.text.Normalizer.Form.NFD);
+        String minusculas = nombre.trim().toLowerCase(Locale.ROOT).replace("ñ", "n~");
+        String separado = Normalizer.normalize(minusculas, Normalizer.Form.NFD);
         return separado.replaceAll("\\p{M}", "");
     }
 
