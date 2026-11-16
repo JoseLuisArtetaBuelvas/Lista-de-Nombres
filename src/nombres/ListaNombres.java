@@ -17,6 +17,10 @@ public class ListaNombres {
     /** Registro de las inserciones significativas (solo para mostrarlas, no para ordenar). */
     private final List<String> pasos = new ArrayList<>();
 
+    /** Contadores del ultimo ordenamiento. */
+    private int comparaciones;
+    private int desplazamientos;
+
     public ListaNombres(String[] nombres) {
         this.nombres = copiar(nombres);
     }
@@ -64,6 +68,8 @@ public class ListaNombres {
      */
     private void insertionSort(boolean ascendente) {
         pasos.clear();
+        comparaciones = 0;
+        desplazamientos = 0;
         // Se recorre desde la segunda posicion: la parte izquierda [0..i-1] ya esta ordenada.
         for (int i = 1; i < nombres.length; i++) {
             String actual = nombres[i];   // el nombre que se va a insertar
@@ -73,6 +79,7 @@ public class ListaNombres {
             // posicion a la derecha para abrir espacio.
             while (j >= 0 && debeIrAntes(actual, nombres[j], ascendente)) {
                 nombres[j + 1] = nombres[j];
+                desplazamientos++;
                 j--;
             }
 
@@ -96,12 +103,32 @@ public class ListaNombres {
         return new ArrayList<>(pasos);
     }
 
+    /** Comparaciones entre nombres realizadas en el ultimo ordenamiento. */
+    public int getComparaciones() {
+        return comparaciones;
+    }
+
+    /**
+     * Desplazamientos del ultimo ordenamiento: cuantas veces un nombre se corrio una posicion
+     * a la derecha. Insertion Sort no intercambia de a pares como Bubble Sort; desplaza.
+     * Cada desplazamiento equivale a un intercambio de los que haria Bubble Sort.
+     */
+    public int getDesplazamientos() {
+        return desplazamientos;
+    }
+
+    /** Cantidad de inserciones en las que el nombre si cambio de posicion. */
+    public int getInsercionesSignificativas() {
+        return pasos.size();
+    }
+
     /**
      * A-Z: el actual va antes si es alfabeticamente MENOR. Z-A: si es MAYOR.
      * Con nombres iguales retorna false, asi los repetidos conservan su orden original
      * (Insertion Sort es un algoritmo estable).
      */
     private boolean debeIrAntes(String actual, String izquierda, boolean ascendente) {
+        comparaciones++;
         int resultado = compararNombres(actual, izquierda);
         return ascendente ? resultado < 0 : resultado > 0;
     }
