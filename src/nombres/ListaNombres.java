@@ -1,6 +1,8 @@
 package nombres;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -11,6 +13,9 @@ public class ListaNombres {
 
     /** Arreglo de nombres. La clase trabaja sobre una copia propia. */
     private final String[] nombres;
+
+    /** Registro de las inserciones significativas (solo para mostrarlas, no para ordenar). */
+    private final List<String> pasos = new ArrayList<>();
 
     public ListaNombres(String[] nombres) {
         this.nombres = copiar(nombres);
@@ -58,6 +63,7 @@ public class ListaNombres {
      * la condicion que decide si el nombre actual debe ir antes que el de su izquierda.
      */
     private void insertionSort(boolean ascendente) {
+        pasos.clear();
         // Se recorre desde la segunda posicion: la parte izquierda [0..i-1] ya esta ordenada.
         for (int i = 1; i < nombres.length; i++) {
             String actual = nombres[i];   // el nombre que se va a insertar
@@ -72,7 +78,22 @@ public class ListaNombres {
 
             // Se inserta el nombre en el hueco que quedo.
             nombres[j + 1] = actual;
+
+            // Insercion significativa: el nombre cambio de posicion (j + 1 != i).
+            // Si no se movio, ya estaba en su lugar y el arreglo no cambia.
+            if (j + 1 != i) {
+                pasos.add(String.format("%-12s pos %2d -> %2d  %s", actual, i, j + 1, formatear()));
+            }
         }
+    }
+
+    /**
+     * Estado del arreglo despues de cada insercion significativa del ultimo ordenamiento.
+     * Cada linea indica el nombre insertado, de que posicion a que posicion se movio y como
+     * quedo el arreglo.
+     */
+    public List<String> getPasos() {
+        return new ArrayList<>(pasos);
     }
 
     /**
