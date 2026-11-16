@@ -7,6 +7,7 @@ import java.util.Scanner;
  *
  * Uso:
  *   java -cp out nombres.Main         -> menu interactivo
+ *   java -cp out nombres.Main demo    -> ejecuta los casos de ejemplo sin menu
  */
 public class Main {
 
@@ -22,7 +23,17 @@ public class Main {
     private static ListaNombres lista = new ListaNombres(NOMBRES_EJEMPLO);
     private static final Scanner entrada = new Scanner(System.in, "UTF-8");
 
+    /** Segundo caso de prueba: un arreglo casi ordenado (solo "Gabriel" y "Fernando" estan intercambiados). */
+    private static final String[] NOMBRES_CASI_ORDENADOS = {
+        "Ana", "beatriz", "Carlos", "Daniel", "Elena", "Gabriel", "Fernando", "hugo", "Ines", "Juan"
+    };
+
     public static void main(String[] args) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("demo")) {
+            ejecutarDemo();
+            return;
+        }
+
         int opcion;
         do {
             mostrarMenu();
@@ -57,6 +68,30 @@ public class Main {
             }
             System.out.println();
         } while (opcion != 0);
+    }
+
+    /** Ejecuta los casos de ejemplo uno tras otro, sin pedir datos. */
+    private static void ejecutarDemo() {
+        System.out.println("===== DEMO: LISTA DE NOMBRES - INSERTION SORT =====");
+        System.out.println();
+        System.out.println("CASO 1: lista de ejemplo desordenada, con mayusculas, minusculas y repetidos");
+        mostrarLista();
+        System.out.println();
+        ordenar(true);
+        System.out.println();
+        ordenar(false);
+        System.out.println();
+
+        System.out.println("CASO 2: arreglo casi ordenado (solo dos nombres fuera de lugar)");
+        lista = new ListaNombres(NOMBRES_CASI_ORDENADOS);
+        mostrarLista();
+        System.out.println();
+        ordenar(true);
+        System.out.println();
+
+        System.out.println("CASO 3: comparacion segun el estado inicial (lista de ejemplo)");
+        lista = new ListaNombres(NOMBRES_EJEMPLO);
+        compararCasos();
     }
 
     private static void mostrarMenu() {
