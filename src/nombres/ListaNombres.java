@@ -40,6 +40,30 @@ public class ListaNombres {
         return sb.append("]").toString();
     }
 
+    /**
+     * Compara dos nombres ignorando mayusculas y minusculas (y tildes).
+     *
+     * @return negativo si a va antes que b, 0 si son iguales, positivo si a va despues
+     */
+    public static int compararNombres(String a, String b) {
+        return normalizar(a).compareTo(normalizar(b));
+    }
+
+    /**
+     * Version del nombre que se usa SOLO para comparar: en minusculas y sin tildes,
+     * para que "ana", "Ana" y "ANA" sean iguales y "Angela" quede junto a "Andres".
+     * La enie se reemplaza por "n~" para que quede entre la n y la o, como en espanol.
+     * El nombre guardado en el arreglo no se modifica.
+     */
+    static String normalizar(String nombre) {
+        if (nombre == null) {
+            return "";
+        }
+        String minusculas = nombre.trim().toLowerCase(java.util.Locale.ROOT).replace("ñ", "n~");
+        String separado = java.text.Normalizer.normalize(minusculas, java.text.Normalizer.Form.NFD);
+        return separado.replaceAll("\\p{M}", "");
+    }
+
     /** Copia manual del arreglo. Un arreglo null se trata como lista vacia. */
     private static String[] copiar(String[] origen) {
         if (origen == null) {
