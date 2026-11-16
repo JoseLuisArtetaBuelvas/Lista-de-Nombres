@@ -133,6 +133,26 @@ public class ListaNombres {
         return ascendente ? resultado < 0 : resultado > 0;
     }
 
+    /** true si cada nombre va antes o es igual al siguiente (A-Z). */
+    public boolean estaOrdenadaAZ() {
+        for (int i = 1; i < nombres.length; i++) {
+            if (compararNombres(nombres[i - 1], nombres[i]) > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** true si cada nombre va despues o es igual al siguiente (Z-A). */
+    public boolean estaOrdenadaZA() {
+        for (int i = 1; i < nombres.length; i++) {
+            if (compararNombres(nombres[i - 1], nombres[i]) < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Compara dos nombres ignorando mayusculas y minusculas (y tildes).
      *
