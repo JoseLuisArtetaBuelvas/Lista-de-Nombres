@@ -45,14 +45,27 @@ public class ListaNombres {
 
     /** Ordena la lista alfabeticamente de A a Z con Insertion Sort. */
     public void ordenarAZ() {
+        insertionSort(true);
+    }
+
+    /** Ordena la lista alfabeticamente de Z a A con Insertion Sort. */
+    public void ordenarZA() {
+        insertionSort(false);
+    }
+
+    /**
+     * Insertion Sort. El mismo algoritmo sirve para los dos sentidos: lo unico que cambia es
+     * la condicion que decide si el nombre actual debe ir antes que el de su izquierda.
+     */
+    private void insertionSort(boolean ascendente) {
         // Se recorre desde la segunda posicion: la parte izquierda [0..i-1] ya esta ordenada.
         for (int i = 1; i < nombres.length; i++) {
             String actual = nombres[i];   // el nombre que se va a insertar
             int j = i - 1;
 
-            // Mientras el nombre de la izquierda vaya DESPUES del actual, se corre una posicion
-            // a la derecha para abrir espacio.
-            while (j >= 0 && compararNombres(actual, nombres[j]) < 0) {
+            // Mientras el actual deba ir antes que el de la izquierda, ese nombre se corre una
+            // posicion a la derecha para abrir espacio.
+            while (j >= 0 && debeIrAntes(actual, nombres[j], ascendente)) {
                 nombres[j + 1] = nombres[j];
                 j--;
             }
@@ -60,6 +73,16 @@ public class ListaNombres {
             // Se inserta el nombre en el hueco que quedo.
             nombres[j + 1] = actual;
         }
+    }
+
+    /**
+     * A-Z: el actual va antes si es alfabeticamente MENOR. Z-A: si es MAYOR.
+     * Con nombres iguales retorna false, asi los repetidos conservan su orden original
+     * (Insertion Sort es un algoritmo estable).
+     */
+    private boolean debeIrAntes(String actual, String izquierda, boolean ascendente) {
+        int resultado = compararNombres(actual, izquierda);
+        return ascendente ? resultado < 0 : resultado > 0;
     }
 
     /**
